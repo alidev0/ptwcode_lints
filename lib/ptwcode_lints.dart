@@ -1,8 +1,11 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
-library;
+import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'src/prefer_moving_to_variable_rule.dart';
 
-export 'src/ptwcode_lints_base.dart';
+PluginBase createPlugin() => _PTWCodeLinters();
 
-// TODO: Export any libraries intended for clients of this package.
+class _PTWCodeLinters extends PluginBase {
+  @override
+  List<LintRule> getLintRules(CustomLintConfigs configs) => [
+        PreferMovingToVariableRule(),
+      ];
+}
