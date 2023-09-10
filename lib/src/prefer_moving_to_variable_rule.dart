@@ -44,8 +44,11 @@ class PreferMovingToVariableRule extends DartLintRule {
       final block =
           node.thisOrAncestorMatching((p0) => p0 is BlockFunctionBody);
 
+      final itemCode = node.toString().split('=').last.trim();
+      if (!itemCode.toString().contains('.')) return;
+
       final item = _Item(
-        node.toString().split('=').last.trim(),
+        itemCode,
         node.offset,
         block?.offset ?? 0,
         node.endToken,
