@@ -8,6 +8,7 @@ final _message =
     'Prefer moving repeated invocations to variable and use it instead.';
 final _code = LintCode(name: _name, problemMessage: _message);
 
+/// an extended class of DartLintRule to implement prefer_moving_to_variable rule
 class PreferMovingToVariableRule extends DartLintRule {
   PreferMovingToVariableRule() : super(code: _code);
 
@@ -60,6 +61,7 @@ class PreferMovingToVariableRule extends DartLintRule {
           node.thisOrAncestorMatching((p0) => p0 is BlockFunctionBody);
 
       for (Expression element in node.arguments) {
+        if (!element.toString().contains('.')) continue;
         final item = _Item(
           element.toString(),
           element.offset,
