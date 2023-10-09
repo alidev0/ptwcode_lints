@@ -40,18 +40,30 @@ class PreferMovingToVariableRule extends DartLintRule {
     List<_Item> all = [];
     List<_Item> reported = [];
 
-    context.registry.addVariableDeclaration((node) {
-      final block =
-          node.thisOrAncestorMatching((p0) => p0 is BlockFunctionBody);
+    context.registry.addExpression((node) {
+      if (!node.toString().contains('.')) return;
+      if (node.toString().contains(') {')) return;
+      if (node.toString().contains('=>')) return;
+      if (node.toString().contains(':')) return;
 
-      final itemCode = node.toString().split('=').last.trim();
-      if (!itemCode.toString().contains('.')) return;
+      final closestBlock =
+          node.thisOrAncestorMatching((p0) => p0 is ExpressionStatement);
+
+      final cond =
+          closestBlock?.toString().contains('(${node.beginToken})') ?? false;
+      if (cond) return;
+
+      BlockFunctionBody? block2;
+      node.thisOrAncestorMatching((p0) {
+        if (p0 is BlockFunctionBody) block2 = p0;
+        return false;
+      });
 
       final item = _Item(
-        itemCode,
-        node.offset,
-        block?.offset ?? 0,
-        node.endToken,
+        code: node.toString(),
+        offset: node.offset,
+        parentOffset: block2?.offset ?? 0,
+        endToken: node.endToken,
       );
 
       all.add(item);
@@ -59,29 +71,56 @@ class PreferMovingToVariableRule extends DartLintRule {
       _checkAndReport(all, reported, reporter);
     });
 
-    context.registry.addArgumentList((node) {
-      final block =
-          node.thisOrAncestorMatching((p0) => p0 is BlockFunctionBody);
+    /// addVariableDeclaration
+    // context.registry.addVariableDeclaration((node) {
+    //   final block =
+    //       node.thisOrAncestorMatching((p0) => p0 is BlockFunctionBody);
 
-      for (Expression element in node.arguments) {
-        if (!element.toString().contains('.')) continue;
-        final item = _Item(
-          element.toString(),
-          element.offset,
-          block?.offset ?? 0,
-          element.endToken,
-        );
+    //   final itemCode = node.toString().split('=').last.trim();
+    //   if (!itemCode.toString().contains('.')) return;
 
-        all.add(item);
-      }
+    //   final item = _Item(
+    //     code: itemCode,
+    //     offset: node.offset,
+    //     parentOffset: block?.offset ?? 0,
+    //     endToken: node.endToken,
+    //   );
 
-      _checkAndReport(all, reported, reporter);
-    });
+    //   all.add(item);
+
+    //   _checkAndReport(all, reported, reporter);
+    // });
+
+    /// addArgumentList
+    // context.registry.addArgumentList((node) {
+    //   final block =
+    //       node.thisOrAncestorMatching((p0) => p0 is BlockFunctionBody);
+
+    //   for (Expression element in node.arguments) {
+    //     if (!element.toString().contains('.')) continue;
+
+    //     final item = _Item(
+    //       code: element.toString(),
+    //       offset: node.offset,
+    //       parentOffset: block?.offset ?? 0,
+    //       endToken: node.endToken,
+    //     );
+
+    //     all.add(item);
+    //   }
+
+    //   _checkAndReport(all, reported, reporter);
+    // });
   }
 }
 
 class _Item {
-  _Item(this.code, this.offset, this.parentOffset, this.endToken);
+  _Item({
+    required this.code,
+    required this.offset,
+    required this.parentOffset,
+    required this.endToken,
+  });
 
   final String code;
   final int offset;
