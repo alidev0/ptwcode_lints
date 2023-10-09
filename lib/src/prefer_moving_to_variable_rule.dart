@@ -64,6 +64,9 @@ class PreferMovingToVariableRule extends DartLintRule {
         }
       }
 
+      final cond3 = closestBlock?.toString().contains('$node.') ?? false;
+      if (cond3) return;
+
       BlockFunctionBody? block2;
       node.thisOrAncestorMatching((p0) {
         if (p0 is BlockFunctionBody) block2 = p0;
