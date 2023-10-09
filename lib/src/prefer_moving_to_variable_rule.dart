@@ -45,13 +45,24 @@ class PreferMovingToVariableRule extends DartLintRule {
       if (node.toString().contains(') {')) return;
       if (node.toString().contains('=>')) return;
       if (node.toString().contains(':')) return;
+      if (node.toString().contains('(')) return;
 
-      final closestBlock =
-          node.thisOrAncestorMatching((p0) => p0 is ExpressionStatement);
+      final closestBlock = node.thisOrAncestorMatching(
+          (p0) => p0 is ExpressionStatement || p0 is FunctionExpression);
 
-      final cond =
+      final cond1 =
           closestBlock?.toString().contains('(${node.beginToken})') ?? false;
-      if (cond) return;
+      if (cond1) return;
+
+      final childEntities = closestBlock?.childEntities ?? [];
+      if (childEntities.isNotEmpty) {
+        final item = childEntities.first.toString().trim();
+        final el = item.replaceAll('(', '').replaceAll(')', '');
+        if (el.isNotEmpty) {
+          final cond2 = item.contains('$el.');
+          if (cond2) return;
+        }
+      }
 
       BlockFunctionBody? block2;
       node.thisOrAncestorMatching((p0) {

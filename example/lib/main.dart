@@ -1,6 +1,20 @@
 class Dumb {
-  void fun1() => print(_user.name);
-  void fun2() => print(_user.name);
+  void fun1() => print(_user.name); // no warning
+  void fun2() => print(_user.name); // no warning
+}
+
+void fun5() {
+  final time = DateTime.now();
+  final items = [];
+
+  final groupByTime1 = {time: items, time: items};
+  final groupByTime2 = {time: items, time: items};
+
+  // ignore: unused_local_variable
+  final yeap = [
+    ...groupByTime1.entries.map((el) => _User(el.key)).toList(), // no warning
+    ...groupByTime2.entries.map((el) => _User(el.key)).toList(), // no warning
+  ];
 }
 
 void fun4() {
@@ -26,7 +40,7 @@ void fun1() {
 
 class _User {
   _User(this.name);
-  final String name;
+  final dynamic name;
 }
 
 final _user = _User('John2');
