@@ -5,6 +5,11 @@ import 'package:example/models.dart';
 class Dumb {
   void fun1() => print(user.name); // no warning
   void fun2() => print(user.name); // no warning
+
+  void fun3() {
+    final age = user2.man.age; // no warning
+    final name = user2.man.name; // no warning
+  }
 }
 
 void fun6() {
