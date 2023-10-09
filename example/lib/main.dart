@@ -1,3 +1,8 @@
+class Dumb {
+  void fun1() => print(_user.name);
+  void fun2() => print(_user.name);
+}
+
 void fun4() {
   list.map((el) => el.name); // no warning
   list.map((el) => el.name); // no warning

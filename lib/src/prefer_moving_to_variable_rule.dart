@@ -58,6 +58,7 @@ class PreferMovingToVariableRule extends DartLintRule {
         if (p0 is BlockFunctionBody) block2 = p0;
         return false;
       });
+      if (block2 == null) return;
 
       final item = _Item(
         code: node.toString(),
