@@ -1,6 +1,8 @@
 class User {
   User(this.name);
   final dynamic name;
+
+  User copyWith(double value) => User(name);
 }
 
 final user = User('John2');

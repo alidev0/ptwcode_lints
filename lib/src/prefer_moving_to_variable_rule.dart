@@ -74,6 +74,9 @@ class PreferMovingToVariableRule extends DartLintRule {
       final cond3 = block2?.toString().contains('$node.') ?? false;
       if (cond3) return;
 
+      final res = double.tryParse(node.toString());
+      if (res != null) return;
+
       final item = _Item(
         code: node.toString(),
         offset: node.offset,

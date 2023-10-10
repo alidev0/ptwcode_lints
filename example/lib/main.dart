@@ -10,6 +10,11 @@ class Dumb {
     final age = user2.man.age; // no warning
     final name = user2.man.name; // no warning
   }
+
+  void fun4() {
+    final user1 = user.copyWith(0.25); // no warning
+    final user2 = user.copyWith(0.25); // no warning
+  }
 }
 
 void fun6() {
