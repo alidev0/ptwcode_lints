@@ -54,6 +54,13 @@ class PreferMovingToVariableRule extends DartLintRule {
           closestBlock?.toString().contains('(${node.beginToken})') ?? false;
       if (cond1) return;
 
+      if (closestBlock != null) {
+        if (closestBlock.toString().contains('=')) {
+          final split = closestBlock.toString().split('=');
+          if (node.toString().trim() == split.first.trim()) return;
+        }
+      }
+
       final childEntities = closestBlock?.childEntities ?? [];
       if (childEntities.isNotEmpty) {
         final item = childEntities.first.toString().trim();

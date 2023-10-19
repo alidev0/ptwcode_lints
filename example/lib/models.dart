@@ -1,3 +1,6 @@
+// ignore_for_file: unused_local_variable
+// ignore_for_file: prefer_moving_to_variable
+
 class User {
   User(this.name);
   final dynamic name;
@@ -20,4 +23,9 @@ class Man {
   final String name;
   final String age;
   Man({required this.name, required this.age});
+}
+
+class Counter {
+  Counter({required this.value});
+  int value;
 }

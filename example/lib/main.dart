@@ -17,6 +17,12 @@ class Dumb {
   }
 }
 
+void fun7() {
+  final counter = Counter(value: 0);
+  counter.value = 1;
+  counter.value = 2;
+}
+
 void fun6() {
   final age = user2.man.age; // no warning
   final name = user2.man.name; // no warning
