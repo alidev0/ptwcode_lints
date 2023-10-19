@@ -17,10 +17,15 @@ class Dumb {
   }
 }
 
+// no warning
 void fun7() {
   final counter = Counter(value: 0);
   counter.value = 1;
   counter.value = 2;
+  counter.value += 1;
+  counter.value += 2;
+  counter.value -= 1;
+  counter.value -= 2;
 }
 
 void fun6() {

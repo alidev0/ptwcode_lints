@@ -43,6 +43,7 @@ class PreferMovingToVariableRule extends DartLintRule {
     context.registry.addExpression((node) {
       if (!node.toString().contains('.')) return;
       if (node.toString().contains(') {')) return;
+      if (node.toString().contains('=')) return;
       if (node.toString().contains('=>')) return;
       if (node.toString().contains(':')) return;
       if (node.toString().contains('(')) return;
@@ -55,9 +56,11 @@ class PreferMovingToVariableRule extends DartLintRule {
       if (cond1) return;
 
       if (closestBlock != null) {
-        if (closestBlock.toString().contains('=')) {
-          final split = closestBlock.toString().split('=');
-          if (node.toString().trim() == split.first.trim()) return;
+        for (String char in ['=', '+=', '-=']) {
+          if (closestBlock.toString().contains(char)) {
+            final split = closestBlock.toString().split(char);
+            if (node.toString().trim() == split.first.trim()) return;
+          }
         }
       }
 
