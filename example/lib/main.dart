@@ -1,25 +1,28 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, unused_element
 
 import 'package:example/models.dart';
 
 class Dumb {
-  void fun1() => print(user.name); // no warning
-  void fun2() => print(user.name); // no warning
+  void fun1() => print(user.name);
+  void fun2() => print(user.name);
 
   void fun3() {
-    final age = user2.man.age; // no warning
-    final name = user2.man.name; // no warning
+    final age = user2.man.age;
+    final name = user2.man.name;
   }
 
   void fun4() {
-    final user1 = user.copyWith(0.25); // no warning
-    final user2 = user.copyWith(0.25); // no warning
+    final user1 = user.copyWith(0.25);
+    final user2 = user.copyWith(0.25);
   }
 }
 
-// no warning
+void fun8() {
+  void aa() => counter.value = 1;
+  void bb() => counter.value = 1;
+}
+
 void fun7() {
-  final counter = Counter(value: 0);
   counter.value = 1;
   counter.value = 2;
   counter.value += 1;
@@ -29,8 +32,8 @@ void fun7() {
 }
 
 void fun6() {
-  final age = user2.man.age; // no warning
-  final name = user2.man.name; // no warning
+  final age = user2.man.age;
+  final name = user2.man.name;
 }
 
 void fun5() {
@@ -41,14 +44,14 @@ void fun5() {
   final groupByTime2 = {time: items, time: items};
 
   final yeap = [
-    ...groupByTime1.entries.map((el) => User(el.key)).toList(), // no warning
-    ...groupByTime2.entries.map((el) => User(el.key)).toList(), // no warning
+    ...groupByTime1.entries.map((el) => User(el.key)).toList(),
+    ...groupByTime2.entries.map((el) => User(el.key)).toList(),
   ];
 }
 
 void fun4() {
-  list.map((el) => el.name); // no warning
-  list.map((el) => el.name); // no warning
+  list.map((el) => el.name);
+  list.map((el) => el.name);
 }
 
 void fun3() {
@@ -58,10 +61,10 @@ void fun3() {
 
 void fun2() {
   final name = user.name; // warning
-  print(user.name);
+  print(user.name); // warning
 }
 
 void fun1() {
-  final name = user.name; // no warning
+  final name = user.name;
   print(name);
 }

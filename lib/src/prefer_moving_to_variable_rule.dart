@@ -57,10 +57,7 @@ class PreferMovingToVariableRule extends DartLintRule {
 
       if (closestBlock != null) {
         for (String char in ['=', '+=', '-=']) {
-          if (closestBlock.toString().contains(char)) {
-            final split = closestBlock.toString().split(char);
-            if (node.toString().trim() == split.first.trim()) return;
-          }
+          if (closestBlock.toString().contains('$node $char')) return;
         }
       }
 

@@ -29,3 +29,5 @@ class Counter {
   Counter({required this.value});
   int value;
 }
+
+final counter = Counter(value: 0);
