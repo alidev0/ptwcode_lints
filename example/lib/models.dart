@@ -31,3 +31,7 @@ class Counter {
 }
 
 final counter = Counter(value: 0);
+
+class Bear {
+  String? age;
+}

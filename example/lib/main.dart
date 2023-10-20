@@ -15,6 +15,11 @@ class Dumb {
     final user1 = user.copyWith(0.25);
     final user2 = user.copyWith(0.25);
   }
+
+  void fun5() {
+    final bear1 = Bear()..age = '5';
+    final bear2 = Bear()..age = '5';
+  }
 }
 
 void fun8() {

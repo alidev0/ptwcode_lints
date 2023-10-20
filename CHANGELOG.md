@@ -1,3 +1,6 @@
+## 1.0.12
+- optim prefer_moving_to_variable rule
+
 ## 1.0.11
 - optim prefer_moving_to_variable rule
 

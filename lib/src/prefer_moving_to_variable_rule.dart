@@ -47,6 +47,7 @@ class PreferMovingToVariableRule extends DartLintRule {
       if (node.toString().contains('=>')) return;
       if (node.toString().contains(':')) return;
       if (node.toString().contains('(')) return;
+      if (node.toString().startsWith('..')) return;
 
       final closestBlock = node.thisOrAncestorMatching(
           (p0) => p0 is ExpressionStatement || p0 is FunctionExpression);
@@ -83,6 +84,11 @@ class PreferMovingToVariableRule extends DartLintRule {
 
       final res = double.tryParse(node.toString());
       if (res != null) return;
+
+      // print('===> node');
+      // print(node);
+      // print(closestBlock);
+      // print(block2);
 
       final item = _Item(
         code: node.toString(),
