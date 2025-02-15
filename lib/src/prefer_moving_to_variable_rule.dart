@@ -24,7 +24,7 @@ class PreferMovingToVariableRule extends DartLintRule {
         final isReported = reported.where((el2) => el2.isSame(el1)).isNotEmpty;
 
         if (!isReported) {
-          reporter.reportErrorForToken(code, el1.endToken);
+          reporter.atToken(el1.endToken, code);
           reported.add(el1);
         }
       }
