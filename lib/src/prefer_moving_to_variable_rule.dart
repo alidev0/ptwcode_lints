@@ -44,6 +44,7 @@ class PreferMovingToVariableRule extends DartLintRule {
         expressions.add(node);
         for (var expr in expressions) {
           if (expr == node) continue;
+          if ('$expr' != '$node') continue;
 
           if (expr is PrefixedIdentifier && node is PrefixedIdentifier) {
             if (expr.staticElement != node.staticElement) continue;
@@ -67,6 +68,7 @@ class PreferMovingToVariableRule extends DartLintRule {
           });
           if (function1?.offset != funs2.lastOrNull?.offset) continue;
 
+          print('==> match: $node - $expr');
           reporter.atToken(expr.endToken, code);
           reporter.atToken(node.endToken, code);
         }
