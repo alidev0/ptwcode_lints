@@ -31,8 +31,6 @@ class PreferMovingToVariableRule extends DartLintRule {
           if (params.contains(node.beginToken.lexeme)) return;
         }
 
-        final target1 = node is PropertyAccess ? node.realTarget : null;
-
         List<AstNode> funs1 = [];
         node.thisOrAncestorMatching((p0) {
           if (p0 is BlockFunctionBody) funs1.add(p0);
@@ -47,6 +45,8 @@ class PreferMovingToVariableRule extends DartLintRule {
           if ('$expr' != '$node') continue;
 
           if (expr is PrefixedIdentifier && node is PrefixedIdentifier) {
+            if (expr.staticElement == null) continue;
+            if (node.staticElement == null) continue;
             if (expr.staticElement != node.staticElement) continue;
           }
 
@@ -56,9 +56,6 @@ class PreferMovingToVariableRule extends DartLintRule {
               continue;
             }
           }
-
-          final target2 = expr is PropertyAccess ? expr.realTarget : null;
-          if (target1 != target2) continue;
 
           List<AstNode> funs2 = [];
           expr.thisOrAncestorMatching((p0) {

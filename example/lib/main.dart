@@ -7,8 +7,10 @@ class Dumb {
   void fun2() => print(user.name);
 
   void fun3() {
-    final age = user2.man.age;
     final name = user2.man.name;
+    
+    final age1 = user2.man.age; // warning
+    final age2 = user2.man.age; // warning
   }
 
   void fun4() {
