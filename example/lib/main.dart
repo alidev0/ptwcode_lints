@@ -22,6 +22,22 @@ class Dumb {
   }
 }
 
+void funp() {
+  final btn1 = Button(
+    doSmth: () {
+      final list = [0];
+      print(list.length);
+    },
+  );
+
+  final btn3 = Button(
+    doSmth: () {
+      final list = [1];
+      print(list.length);
+    },
+  );
+}
+
 void fun8() {
   void aa() => counter.value = 1;
   void bb() => counter.value = 1;
@@ -60,16 +76,16 @@ void fun4() {
 }
 
 void fun3() {
-  list.map((el) => user.name); // warning
-  list.map((el) => user.name); // warning
+  list.map((el) => user.surname); // warning
+  list.map((el) => user.surname); // warning
 }
 
 void fun2() {
-  final name = user.name; // warning
-  print(user.name); // warning
+  final address = user.address; // warning
+  print(user.address); // warning
 }
 
 void fun1() {
-  final name = user.name;
-  print(name);
+  final location = user.location;
+  print(location);
 }

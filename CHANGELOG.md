@@ -1,3 +1,6 @@
+## 1.0.14
+- optim prefer_moving_to_variable rule
+
 ## 1.0.13
 - update dependencies
 

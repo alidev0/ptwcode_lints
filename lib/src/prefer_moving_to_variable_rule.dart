@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
@@ -12,159 +11,66 @@ final _code = LintCode(name: _name, problemMessage: _message);
 class PreferMovingToVariableRule extends DartLintRule {
   PreferMovingToVariableRule() : super(code: _code);
 
-  void _checkAndReport(
-    List<_Item> all,
-    List<_Item> reported,
-    ErrorReporter reporter,
-  ) {
-    for (var el1 in all) {
-      final length = all.where((el2) => el2.hasSameRef(el1)).length;
-
-      if (length > 1) {
-        final isReported = reported.where((el2) => el2.isSame(el1)).isNotEmpty;
-
-        if (!isReported) {
-          reporter.atToken(el1.endToken, code);
-          reported.add(el1);
-        }
-      }
-    }
-  }
-
   @override
   void run(
     CustomLintResolver resolver,
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    List<_Item> all = [];
-    List<_Item> reported = [];
+    final expressions = <Expression>{};
 
-    context.registry.addExpression((node) {
-      if (!node.toString().contains('.')) return;
-      if (node.toString().contains(') {')) return;
-      if (node.toString().contains('=')) return;
-      if (node.toString().contains('=>')) return;
-      if (node.toString().contains(':')) return;
-      if (node.toString().contains('(')) return;
-      if (node.toString().startsWith('..')) return;
+    context.registry.addExpression((Expression node) {
+      if (node.parent is PropertyAccess) return;
+      if (node.parent is AssignmentExpression) return;
 
-      final closestBlock = node.thisOrAncestorMatching(
-          (p0) => p0 is ExpressionStatement || p0 is FunctionExpression);
+      if (node is PrefixedIdentifier || node is PropertyAccess) {
+        final parent = node.parent?.parent;
+        if (parent is FunctionExpression) {
+          final params =
+              parent.parameters?.parameterElements.map((el) => el?.name) ?? [];
+          if (params.contains(node.beginToken.lexeme)) return;
+        }
 
-      final cond1 =
-          closestBlock?.toString().contains('(${node.beginToken})') ?? false;
-      if (cond1) return;
+        final target1 = node is PropertyAccess ? node.realTarget : null;
 
-      if (closestBlock != null) {
-        for (String char in ['=', '+=', '-=']) {
-          if (closestBlock.toString().contains('$node $char')) return;
+        List<AstNode> funs1 = [];
+        node.thisOrAncestorMatching((p0) {
+          if (p0 is BlockFunctionBody) funs1.add(p0);
+          if (p0 is ExpressionFunctionBody) funs1.add(p0);
+          return false;
+        });
+        final function1 = funs1.lastOrNull;
+
+        expressions.add(node);
+        for (var expr in expressions) {
+          if (expr == node) continue;
+
+          if (expr is PrefixedIdentifier && node is PrefixedIdentifier) {
+            if (expr.staticElement != node.staticElement) continue;
+          }
+
+          if (expr is PropertyAccess && node is PropertyAccess) {
+            if (expr.propertyName.staticElement !=
+                node.propertyName.staticElement) {
+              continue;
+            }
+          }
+
+          final target2 = expr is PropertyAccess ? expr.realTarget : null;
+          if (target1 != target2) continue;
+
+          List<AstNode> funs2 = [];
+          expr.thisOrAncestorMatching((p0) {
+            if (p0 is BlockFunctionBody) funs2.add(p0);
+            if (p0 is ExpressionFunctionBody) funs2.add(p0);
+            return false;
+          });
+          if (function1?.offset != funs2.lastOrNull?.offset) continue;
+
+          reporter.atToken(expr.endToken, code);
+          reporter.atToken(node.endToken, code);
         }
       }
-
-      final childEntities = closestBlock?.childEntities ?? [];
-      if (childEntities.isNotEmpty) {
-        final item = childEntities.first.toString().trim();
-        final el = item.replaceAll('(', '').replaceAll(')', '');
-        if (el.isNotEmpty) {
-          final cond2 = item.contains('$el.');
-          if (cond2) return;
-        }
-      }
-
-      BlockFunctionBody? block2;
-      node.thisOrAncestorMatching((p0) {
-        if (p0 is BlockFunctionBody) block2 = p0;
-        return false;
-      });
-      if (block2 == null) return;
-
-      final cond3 = block2?.toString().contains('$node.') ?? false;
-      if (cond3) return;
-
-      final res = double.tryParse(node.toString());
-      if (res != null) return;
-
-      // print('===> node');
-      // print(node);
-      // print(closestBlock);
-      // print(block2);
-
-      final item = _Item(
-        code: node.toString(),
-        offset: node.offset,
-        parentOffset: block2?.offset ?? 0,
-        endToken: node.endToken,
-      );
-
-      all.add(item);
-
-      _checkAndReport(all, reported, reporter);
     });
-
-    /// addVariableDeclaration
-    // context.registry.addVariableDeclaration((node) {
-    //   final block =
-    //       node.thisOrAncestorMatching((p0) => p0 is BlockFunctionBody);
-
-    //   final itemCode = node.toString().split('=').last.trim();
-    //   if (!itemCode.toString().contains('.')) return;
-
-    //   final item = _Item(
-    //     code: itemCode,
-    //     offset: node.offset,
-    //     parentOffset: block?.offset ?? 0,
-    //     endToken: node.endToken,
-    //   );
-
-    //   all.add(item);
-
-    //   _checkAndReport(all, reported, reporter);
-    // });
-
-    /// addArgumentList
-    // context.registry.addArgumentList((node) {
-    //   final block =
-    //       node.thisOrAncestorMatching((p0) => p0 is BlockFunctionBody);
-
-    //   for (Expression element in node.arguments) {
-    //     if (!element.toString().contains('.')) continue;
-
-    //     final item = _Item(
-    //       code: element.toString(),
-    //       offset: node.offset,
-    //       parentOffset: block?.offset ?? 0,
-    //       endToken: node.endToken,
-    //     );
-
-    //     all.add(item);
-    //   }
-
-    //   _checkAndReport(all, reported, reporter);
-    // });
-  }
-}
-
-class _Item {
-  _Item({
-    required this.code,
-    required this.offset,
-    required this.parentOffset,
-    required this.endToken,
-  });
-
-  final String code;
-  final int offset;
-  final int parentOffset;
-  final Token endToken;
-
-  bool hasSameRef(_Item item) {
-    return code == item.code && parentOffset == item.parentOffset;
-  }
-
-  bool isSame(_Item item) {
-    return code == item.code &&
-        parentOffset == item.parentOffset &&
-        offset == item.offset;
   }
 }

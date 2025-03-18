@@ -4,6 +4,9 @@
 class User {
   User(this.name);
   final dynamic name;
+  final String surname = 'some-surname';
+  final String address = 'some-address';
+  final String location = 'some-location';
 
   User copyWith(double value) => User(name);
 }
@@ -34,4 +37,9 @@ final counter = Counter(value: 0);
 
 class Bear {
   String? age;
+}
+
+class Button {
+  Button({required this.doSmth});
+  void Function() doSmth;
 }
