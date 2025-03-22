@@ -43,3 +43,7 @@ class Button {
   Button({required this.doSmth});
   void Function() doSmth;
 }
+
+class StreamProvider {
+  static late Stream Function<T>(dynamic) autoDispose;
+}

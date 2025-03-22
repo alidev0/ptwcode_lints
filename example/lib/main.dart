@@ -8,7 +8,7 @@ class Dumb {
 
   void fun3() {
     final name = user2.man.name;
-    
+
     final age1 = user2.man.age; // warning
     final age2 = user2.man.age; // warning
   }
@@ -17,14 +17,17 @@ class Dumb {
     final user1 = user.copyWith(0.25);
     final user2 = user.copyWith(0.25);
   }
-
-  void fun5() {
-    final bear1 = Bear()..age = '5';
-    final bear2 = Bear()..age = '5';
-  }
 }
 
-void funp() {
+final stream1 = StreamProvider.autoDispose<void>((_) => Stream.empty());
+final stream2 = StreamProvider.autoDispose<void>((_) => Stream.empty());
+
+void fun10() {
+  final bear1 = Bear()..age = '5';
+  final bear2 = Bear()..age = '5';
+}
+
+void fun9() {
   final btn1 = Button(
     doSmth: () {
       final list = [0];

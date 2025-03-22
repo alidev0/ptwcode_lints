@@ -3,6 +3,9 @@ name: example
 environment:
   sdk: '>=3.1.1 <4.0.0'
 
+# dependencies:
+#   hooks_riverpod: ^2.6.1
+
 dev_dependencies:
   ptwcode_lints:
     path: ../
