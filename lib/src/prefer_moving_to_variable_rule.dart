@@ -26,10 +26,13 @@ class PreferMovingToVariableRule extends DartLintRule {
       if (node is PrefixedIdentifier || node is PropertyAccess) {
         if ('$node'.endsWith('.autoDispose')) return;
 
-        final parent = node.parent?.parent;
-        if (parent is FunctionExpression) {
+        final parent = node.parent;
+        if (parent is DefaultFormalParameter) return;
+
+        final parent2 = node.parent?.parent;
+        if (parent2 is FunctionExpression) {
           final params =
-              parent.parameters?.parameterElements.map((el) => el?.name) ?? [];
+              parent2.parameters?.parameterElements.map((el) => el?.name) ?? [];
           if (params.contains(node.beginToken.lexeme)) return;
         }
 

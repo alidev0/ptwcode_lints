@@ -8,6 +8,8 @@ class User {
   final String address = 'some-address';
   final String location = 'some-location';
 
+  static const String smth = 'smth';
+
   User copyWith(double value) => User(name);
 }
 

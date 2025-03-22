@@ -3,6 +3,16 @@
 import 'package:example/models.dart';
 
 class Dumb {
+  Dumb.v1({
+    this.smth = User.smth,
+  });
+
+  Dumb.v2({
+    this.smth = User.smth,
+  });
+
+  final smth;
+
   void fun1() => print(user.name);
   void fun2() => print(user.name);
 
@@ -12,15 +22,15 @@ class Dumb {
     final age1 = user2.man.age; // warning
     final age2 = user2.man.age; // warning
   }
-
-  void fun4() {
-    final user1 = user.copyWith(0.25);
-    final user2 = user.copyWith(0.25);
-  }
 }
 
 final stream1 = StreamProvider.autoDispose<void>((_) => Stream.empty());
 final stream2 = StreamProvider.autoDispose<void>((_) => Stream.empty());
+
+void fun11() {
+  final user1 = user.copyWith(0.25);
+  final user2 = user.copyWith(0.25);
+}
 
 void fun10() {
   final bear1 = Bear()..age = '5';
