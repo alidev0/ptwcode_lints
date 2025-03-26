@@ -11,6 +11,13 @@ class User {
   static const String smth = 'smth';
 
   User copyWith(double value) => User(name);
+
+  Model<String> get smth2 => Model<String>();
+}
+
+class Model<T> {
+  Future<bool> set1(T value) async => true;
+  Future<bool> set2(T value) async => false;
 }
 
 final user = User('John2');

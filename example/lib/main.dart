@@ -15,17 +15,22 @@ class Dumb {
 
   void fun1() => print(user.name);
   void fun2() => print(user.name);
-
-  void fun3() {
-    final name = user2.man.name;
-
-    final age1 = user2.man.age; // warning
-    final age2 = user2.man.age; // warning
-  }
 }
 
 final stream1 = StreamProvider.autoDispose<void>((_) => Stream.empty());
 final stream2 = StreamProvider.autoDispose<void>((_) => Stream.empty());
+
+void fun13() {
+  final name = user2.man.name;
+
+  final age1 = user2.man.age; // warning
+  final age2 = user2.man.age; // warning
+}
+
+void fun12() {
+  user.smth2.set1('value');
+  user.smth2.set2('value');
+}
 
 void fun11() {
   final user1 = user.copyWith(0.25);

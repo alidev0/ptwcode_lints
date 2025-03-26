@@ -22,6 +22,7 @@ class PreferMovingToVariableRule extends DartLintRule {
     context.registry.addExpression((Expression node) {
       if (node.parent is PropertyAccess) return;
       if (node.parent is AssignmentExpression) return;
+      if (node.parent is MethodInvocation) return;
 
       if (node is PrefixedIdentifier || node is PropertyAccess) {
         if ('$node'.endsWith('.autoDispose')) return;
