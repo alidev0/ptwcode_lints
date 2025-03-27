@@ -12,13 +12,16 @@ class Dumb {
   });
 
   final smth;
-
-  void fun1() => print(user.name);
-  void fun2() => print(user.name);
 }
 
 final stream1 = StreamProvider.autoDispose<void>((_) => Stream.empty());
 final stream2 = StreamProvider.autoDispose<void>((_) => Stream.empty());
+
+final stream3 = StreamProvider.family<void>((_) => Stream.empty());
+final stream4 = StreamProvider.family<void>((_) => Stream.empty());
+
+void fun15() => print(user.name);
+void fun14() => print(user.name);
 
 void fun13() {
   final name = user2.man.name;

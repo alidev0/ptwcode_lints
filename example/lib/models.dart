@@ -55,4 +55,5 @@ class Button {
 
 class StreamProvider {
   static late Stream Function<T>(dynamic) autoDispose;
+  static late Stream Function<T>(dynamic) family;
 }
