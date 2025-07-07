@@ -57,3 +57,8 @@ class StreamProvider {
   static late Stream Function<T>(dynamic) autoDispose;
   static late Stream Function<T>(dynamic) family;
 }
+
+class ListView {
+  ListView.separated({required this.itemBuilder});
+  final String Function(int p0, int p1) itemBuilder;
+}

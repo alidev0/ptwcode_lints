@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
@@ -29,9 +30,17 @@ class PreferMovingToVariableRule extends DartLintRule {
       if (node is PrefixedIdentifier || node is PropertyAccess) {
         final parent2 = node.parent?.parent;
         if (parent2 is FunctionExpression) {
-          final params =
-              parent2.parameters?.parameterElements.map((el) => el?.name) ?? [];
+          final params = parent2.parameters?.parameterFragments
+                  .map((el) => el?.element.name3) ??
+              [];
           if (params.contains(node.beginToken.lexeme)) return;
+        }
+
+        for (var item in node.childEntities) {
+          if (item is IndexExpression) return;
+          if (item is SimpleIdentifier) {
+            if (item.element is LocalVariableFragment) return;
+          }
         }
 
         List<AstNode> funs1 = [];
@@ -48,14 +57,13 @@ class PreferMovingToVariableRule extends DartLintRule {
           if ('$expr' != '$node') continue;
 
           if (expr is PrefixedIdentifier && node is PrefixedIdentifier) {
-            if (expr.staticElement == null) continue;
-            if (node.staticElement == null) continue;
-            if (expr.staticElement != node.staticElement) continue;
+            if (expr.element == null) continue;
+            if (node.element == null) continue;
+            if (expr.element != node.element) continue;
           }
 
           if (expr is PropertyAccess && node is PropertyAccess) {
-            if (expr.propertyName.staticElement !=
-                node.propertyName.staticElement) {
+            if (expr.propertyName.element != node.propertyName.element) {
               continue;
             }
           }

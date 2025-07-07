@@ -20,6 +20,18 @@ final stream2 = StreamProvider.autoDispose<void>((_) => Stream.empty());
 final stream3 = StreamProvider.family<void>((_) => Stream.empty());
 final stream4 = StreamProvider.family<void>((_) => Stream.empty());
 
+void fun16() {
+  final list = [User('user1'), User('user2'), User('user3')];
+  ListView.separated(itemBuilder: (p0, i) {
+    final name = list[i].name;
+    return name;
+  });
+  ListView.separated(itemBuilder: (p0, i) {
+    final name = list[i].name;
+    return name;
+  });
+}
+
 void fun15() => print(user.name);
 void fun14() => print(user.name);
 
