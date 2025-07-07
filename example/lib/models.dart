@@ -62,3 +62,7 @@ class ListView {
   ListView.separated({required this.itemBuilder});
   final String Function(int p0, int p1) itemBuilder;
 }
+
+String modify(String name) {
+  return name;
+}

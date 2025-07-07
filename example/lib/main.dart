@@ -30,6 +30,26 @@ void fun16() {
     final name = list[i].name;
     return name;
   });
+
+  ListView.separated(itemBuilder: (p0, i) {
+    final user = list.first;
+    final name = modify(user.name); // warning
+    return name;
+  });
+  ListView.separated(itemBuilder: (p0, i) {
+    final user = list.first;
+    final name = modify(user.name); // warning
+    return name;
+  });
+
+  ListView.separated(itemBuilder: (p0, i) {
+    final user = list[i];
+    return user.name;
+  });
+  ListView.separated(itemBuilder: (p0, i) {
+    final user = list[i];
+    return user.name;
+  });
 }
 
 void fun15() => print(user.name);

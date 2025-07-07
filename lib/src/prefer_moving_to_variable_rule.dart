@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
@@ -38,8 +37,17 @@ class PreferMovingToVariableRule extends DartLintRule {
 
         for (var item in node.childEntities) {
           if (item is IndexExpression) return;
-          if (item is SimpleIdentifier) {
-            if (item.element is LocalVariableFragment) return;
+        }
+
+        final prefix = node is PrefixedIdentifier ? node.prefix : null;
+        final statements = node.thisOrAncestorOfType<Block>()?.statements ?? [];
+        for (final statement in statements) {
+          if (statement is VariableDeclarationStatement) {
+            for (final variable in statement.variables.variables) {
+              if (variable.declaredElement2 == prefix?.element) {
+                if (variable.initializer is IndexExpression) return;
+              }
+            }
           }
         }
 
