@@ -14,7 +14,7 @@ class PreferMovingToVariableRule extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     final expressions = <Expression>{};
@@ -30,7 +30,7 @@ class PreferMovingToVariableRule extends DartLintRule {
         final parent2 = node.parent?.parent;
         if (parent2 is FunctionExpression) {
           final params = parent2.parameters?.parameterFragments
-                  .map((el) => el?.element.name3) ??
+                  .map((el) => el?.element.name) ??
               [];
           if (params.contains(node.beginToken.lexeme)) return;
         }
@@ -44,7 +44,7 @@ class PreferMovingToVariableRule extends DartLintRule {
         for (final statement in statements) {
           if (statement is VariableDeclarationStatement) {
             for (final variable in statement.variables.variables) {
-              if (variable.declaredElement2 == prefix?.element) {
+              if (variable.declaredFragment?.element == prefix?.element) {
                 if (variable.initializer is IndexExpression) return;
               }
             }

@@ -1,3 +1,6 @@
+## 1.0.25
+- update packages
+
 ## 1.0.24
 - optim prefer_moving_to_variable rule
 

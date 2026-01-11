@@ -1,15 +1,15 @@
 name: ptwcode_lints
 description: This package contains a set of lints for Flutter to encourage good coding practices.
-version: 1.0.24
+version: 1.0.25
 repository: https://github.com/alidev0/ptwcode_lints
 
 environment:
   sdk: ^3.6.2
 
 dependencies:
-  analyzer: ^7.3.0
+  analyzer: ^8.0.0
   analyzer_plugin: ^0.13.0
-  custom_lint_builder: ^0.7.5
+  custom_lint_builder: ^0.8.1
 
 dev_dependencies:
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
