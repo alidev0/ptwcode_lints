@@ -1,4 +1,4 @@
-## Unreleased
+## 1.0.26
 - Migrate from legacy custom_lint plugins to the Dart analyzer plugin API.
 - Require Dart 3.11 or later and explicitly enable rules under `plugins`.
 
