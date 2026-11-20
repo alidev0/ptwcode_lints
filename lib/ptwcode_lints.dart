@@ -1,13 +1,15 @@
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analysis_server_plugin/plugin.dart';
+import 'package:analysis_server_plugin/registry.dart';
+
 import 'src/prefer_moving_to_variable_rule.dart';
 
-/// This is the entrypoint of our custom linter
-PluginBase createPlugin() => _PTWCodeLinters();
-
-/// A class is used to list all the assists/lints defined by ptwcode_lints plugin.
-class _PTWCodeLinters extends PluginBase {
+/// The analyzer plugin for ptwcode_lints.
+class PTWCodeLinters extends Plugin {
   @override
-  List<LintRule> getLintRules(CustomLintConfigs configs) => [
-        PreferMovingToVariableRule(),
-      ];
+  String get name => 'ptwcode_lints';
+
+  @override
+  void register(PluginRegistry registry) {
+    registry.registerLintRule(PreferMovingToVariableRule());
+  }
 }

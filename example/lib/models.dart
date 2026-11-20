@@ -1,5 +1,5 @@
 // ignore_for_file: unused_local_variable
-// ignore_for_file: prefer_moving_to_variable
+// ignore_for_file: ptwcode_lints/prefer_moving_to_variable
 
 class User {
   User(this.name);

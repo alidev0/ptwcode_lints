@@ -1,3 +1,5 @@
-analyzer:
-  plugins:
-    - custom_lint
+plugins:
+  ptwcode_lints:
+    path: ..
+    diagnostics:
+      prefer_moving_to_variable: true
