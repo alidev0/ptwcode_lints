@@ -3,6 +3,7 @@ import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart';
 
 final _name = 'prefer_moving_to_variable';
@@ -25,6 +26,7 @@ class PreferMovingToVariableRule extends AnalysisRule {
     final visitor = _Visitor(this);
     registry.addPrefixedIdentifier(this, visitor);
     registry.addPropertyAccess(this, visitor);
+    registry.addVariableDeclaration(this, visitor);
   }
 }
 
@@ -33,6 +35,18 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   final PreferMovingToVariableRule rule;
   final expressions = <Expression>{};
+  final initializers = <LocalVariableElement, Expression>{};
+
+  @override
+  void visitVariableDeclaration(VariableDeclaration node) {
+    final element = node.declaredFragment?.element;
+    final initializer = node.initializer;
+    if (element is LocalVariableElement &&
+        element.isFinal &&
+        initializer != null) {
+      initializers[element] = initializer;
+    }
+  }
 
   @override
   void visitPrefixedIdentifier(PrefixedIdentifier node) => _check(node);
@@ -91,12 +105,14 @@ class _Visitor extends SimpleAstVisitor<void> {
           if (expr.element == null) continue;
           if (node.element == null) continue;
           if (expr.element != node.element) continue;
+          if (!_sameTarget(expr.prefix, node.prefix)) continue;
         }
 
         if (expr is PropertyAccess && node is PropertyAccess) {
           if (expr.propertyName.element != node.propertyName.element) {
             continue;
           }
+          if (!_sameTarget(expr.target, node.target)) continue;
         }
 
         List<AstNode> funs2 = [];
@@ -111,6 +127,51 @@ class _Visitor extends SimpleAstVisitor<void> {
         rule.reportAtToken(expr.endToken);
         rule.reportAtToken(node.endToken);
       }
+    }
+  }
+
+  // Matching property names can refer to different local variables, even when
+  // those variables share the same name in separate callbacks.
+  bool _sameTarget(Expression? first, Expression? second) {
+    first = _resolveTarget(first);
+    second = _resolveTarget(second);
+    if (identical(first, second)) return true;
+    if (first == null || second == null) return first == second;
+    if (first is SimpleIdentifier && second is SimpleIdentifier) {
+      return first.element != null && first.element == second.element;
+    }
+    if (first is PrefixedIdentifier && second is PrefixedIdentifier) {
+      return first.element?.baseElement == second.element?.baseElement &&
+          _sameTarget(first.prefix, second.prefix);
+    }
+    if (first is PropertyAccess && second is PropertyAccess) {
+      return first.propertyName.element?.baseElement ==
+              second.propertyName.element?.baseElement &&
+          _sameTarget(first.target, second.target);
+    }
+    if (first is ParenthesizedExpression && second is ParenthesizedExpression) {
+      return _sameTarget(first.expression, second.expression);
+    }
+    return (first is ThisExpression && second is ThisExpression) ||
+        (first is SuperExpression && second is SuperExpression);
+  }
+
+  // Follow final local aliases, while keeping separate allocations distinct.
+  Expression? _resolveTarget(Expression? target) {
+    final visited = <Element>{};
+    while (true) {
+      if (target is ParenthesizedExpression) {
+        target = target.expression;
+        continue;
+      }
+      if (target is! SimpleIdentifier) return target;
+      final element = target.element;
+      if (element is! LocalVariableElement || !visited.add(element)) {
+        return target;
+      }
+      final initializer = initializers[element];
+      if (initializer == null) return target;
+      target = initializer;
     }
   }
 }
